@@ -60,7 +60,14 @@ class OccurrenceRepository @Inject constructor(
                     }
 
             }
+    }
 
+    fun removeOccurrence(id: String) {
+        occurrenceDao.deleteOccurrence(id)
+            .subscribeOn(ioScheduler)
+            .subscribe {
+                getDetailsByDay(LocalDate.now())
+            }
     }
 
     private fun makeOccurrence(event: Event) =

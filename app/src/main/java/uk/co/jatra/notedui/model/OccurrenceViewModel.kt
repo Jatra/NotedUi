@@ -5,10 +5,11 @@ import androidx.lifecycle.ViewModel
 import org.threeten.bp.LocalDate
 import uk.co.jatra.notedui.repositories.OccurrenceRepository
 import uk.co.jatra.notedui.ui.EventRequestListener
+import uk.co.jatra.notedui.ui.OccurrenceRequestListener
 import uk.co.jatra.notedui.ui.OccurrenceViewState
 
 class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewModel(),
-    EventRequestListener {
+    EventRequestListener, OccurrenceRequestListener {
     val viewStates: MutableLiveData<List<OccurrenceViewState>> = MutableLiveData()
 
     init {
@@ -26,6 +27,7 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
         repository.occurrenceDetailsSubject.subscribe {
             viewStates.postValue(it.map { details ->
                 OccurrenceViewState(
+                    details.id,
                     details.eventName,
                     details.description,
                     details.userId,
@@ -46,5 +48,9 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
 
     override fun addOccurrenceOfEvent(id: String) {
         repository.addOccurrence(id)
+    }
+
+    override fun removeOccurrence(id: String) {
+        repository.removeOccurrence(id)
     }
 }

@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import kotlinx.android.synthetic.main.activity_main.*
@@ -13,6 +14,7 @@ import uk.co.jatra.notedui.R
 import uk.co.jatra.notedui.model.EventViewModel
 import uk.co.jatra.notedui.model.OccurrenceViewModel
 import javax.inject.Inject
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -30,13 +32,17 @@ class MainActivity : AppCompatActivity() {
         setContentView(R.layout.activity_main)
         setSupportActionBar(toolbar)
 
-        val occurrencesAdapter = OccurrencesAdapter()
-        recycler.adapter = occurrencesAdapter
-        recycler.layoutManager = LinearLayoutManager(this)
-
         occurrenceViewModel =
             ViewModelProviders.of(this, occurrenceViewModelFactory)
                 .get(OccurrenceViewModel::class.java)
+
+        val occurrencesAdapter = OccurrencesAdapter(occurrenceViewModel)
+        recycler.adapter = occurrencesAdapter
+        recycler.layoutManager = LinearLayoutManager(this)
+
+        val itemTouchHelper = ItemTouchHelper(SwipeToDeleteCallback(occurrencesAdapter))
+        itemTouchHelper.attachToRecyclerView(recycler)
+
         occurrenceViewModel.viewStates.observe(
             this,
             Observer<List<OccurrenceViewState>> { occurrences ->

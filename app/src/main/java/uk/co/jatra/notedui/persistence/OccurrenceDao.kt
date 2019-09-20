@@ -58,4 +58,12 @@ interface OccurrenceDao {
      */
     @Query("SELECT * FROM OccurrenceDetail WHERE date = :date ORDER BY time DESC")
     fun getAllOccurrencesDetailsByDate(date: String): Flowable<List<OccurrenceDetail>>
+
+
+    /**
+     * Delete a specific occurrence.
+     * @param id the id of the occurrence to delete
+     */
+    @Query("DELETE FROM occurrence WHERE id = :id")
+    fun deleteOccurrence(id: String): Completable
 }
