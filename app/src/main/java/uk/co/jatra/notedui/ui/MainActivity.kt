@@ -1,12 +1,17 @@
 package uk.co.jatra.notedui.ui
 
 import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.get
+import androidx.core.view.isVisible
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
+import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.events_sheet.*
 import uk.co.jatra.notedui.NotedApplication
@@ -60,7 +65,32 @@ class MainActivity : AppCompatActivity() {
         }
 
         val sheetBehavior = BottomSheetBehavior.from(eventSheet)
-        sheetBehavior.state = BottomSheetBehavior.STATE_HALF_EXPANDED
+        sheetBehavior.state = STATE_EXPANDED
+
+        sheetBehavior.setBottomSheetCallback(object : BottomSheetCallback() {
+            override fun onSlide(p0: View, p1: Float) {
+            }
+
+            override fun onStateChanged(sheet: View, state: Int) {
+                if (state == STATE_EXPANDED) {
+                    fab.isVisible = false
+                    val rows = eventList.childCount.coerceAtMost(3)
+                    if (rows > 0) {
+                        val height = rows * eventList[0].height
+                        Log.d("sheet", "setting height to $height")
+                        eventSheet.post {
+                            eventSheet.layoutParams.height = height
+                            eventSheet.requestLayout()
+                            eventSheet.invalidate()
+                        }
+                    }
+                }
+                if (state == STATE_COLLAPSED || state == STATE_HIDDEN) {
+                    fab.isVisible = true
+                }
+            }
+
+        })
 
         val eventsAdapter = EventsAdapter(occurrenceViewModel)
         eventList.adapter = eventsAdapter
@@ -78,6 +108,9 @@ class MainActivity : AppCompatActivity() {
 
         eventViewModel.getData()
 
+        fab.setOnClickListener {
+            sheetBehavior.state = STATE_EXPANDED
+        }
     }
 
     private fun getInjector() = (application as NotedApplication).appComponent
