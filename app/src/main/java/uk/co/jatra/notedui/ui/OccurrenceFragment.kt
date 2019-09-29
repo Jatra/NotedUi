@@ -80,7 +80,7 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
             root.dateText.text = it
         })
 
-        occurrenceViewModel.showDatePicker.observe(this, Observer<LocalDate> {
+        occurrenceViewModel.showDatePicker.observe(this, Observer {
             showDatePicker(it)
         })
 

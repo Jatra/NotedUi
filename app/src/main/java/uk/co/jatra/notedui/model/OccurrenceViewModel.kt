@@ -4,6 +4,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
 import org.threeten.bp.LocalDate
+import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
 import uk.co.jatra.notedui.repositories.OccurrenceRepository
 import uk.co.jatra.notedui.ui.EventRequestListener
@@ -34,7 +35,7 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
                         details.eventName,
                         details.description,
                         details.userId,
-                        "at ${details.time}"
+                        timeString(details)
                     )
                 })
                 date.postValue(dateText(internalDate))
@@ -52,9 +53,6 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
     override fun onCleared() {
         disposables.clear()
     }
-
-    private fun dateText(date: LocalDate) =
-        date.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
 
     fun getDetails() {
         repository.getDetailsByDay(internalDate)
@@ -92,4 +90,21 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
     fun archive() {
         repository.getAllDetails()
     }
+
+    private fun dateText(date: LocalDate) =
+        date.format(DateTimeFormatter.ofPattern("d MMMM yyyy"))
+
+    private fun timeString(details: OccurrenceDetail): String {
+        val timeString = details.time
+        return if (timeString.contains(':')) "at $timeString" else "at ${this.convertNanosOfDay(
+            timeString
+        )}"
+    }
+
+    private fun convertNanosOfDay(secondsString: String): String {
+        return LocalTime.ofNanoOfDay(secondsString.toLong())
+            .format(DateTimeFormatter.ofPattern("hh:mma"))
+    }
 }
+
+

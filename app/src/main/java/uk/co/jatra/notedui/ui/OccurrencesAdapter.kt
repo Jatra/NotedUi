@@ -50,7 +50,7 @@ class OccurrencesAdapter(private val listener: OccurrenceRequestListener) :
 
 data class OccurrenceViewHolder(val view: View) : RecyclerView.ViewHolder(view)
 
-class SwipeToDeleteCallback(val adapter: OccurrencesAdapter) :
+class SwipeToDeleteCallback(private val adapter: OccurrencesAdapter) :
     ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT or ItemTouchHelper.RIGHT) {
     override fun onMove(
         recyclerView: RecyclerView,

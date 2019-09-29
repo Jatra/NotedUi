@@ -1,4 +1,4 @@
-package uk.co.jatra.noted.model
+package uk.co.jatra.notedui.model
 
 import androidx.room.DatabaseView
 

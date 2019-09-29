@@ -5,10 +5,9 @@ import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import io.reactivex.Completable
-
 import io.reactivex.Flowable
-import uk.co.jatra.noted.model.OccurrenceDetail
 import uk.co.jatra.notedui.model.Occurrence
+import uk.co.jatra.notedui.model.OccurrenceDetail
 
 /**
  * Data Access Object for the occurrences table.

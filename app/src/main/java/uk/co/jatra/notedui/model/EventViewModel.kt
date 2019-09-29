@@ -5,7 +5,7 @@ import androidx.lifecycle.ViewModel
 import uk.co.jatra.notedui.repositories.EventRepository
 import uk.co.jatra.notedui.ui.EventViewState
 
-class EventViewModel(val repository: EventRepository) : ViewModel() {
+class EventViewModel(private val repository: EventRepository) : ViewModel() {
     val viewStates: MutableLiveData<List<EventViewState>> = MutableLiveData()
 
     init {

@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
  * Each [Occurrence] in an instance of an [Event]
  * @property[id] The server assigned id of the occurrence.
  * @property[date] The date of the occurrence
- * @property[time] The time of day of the occurrence
+ * @property[time] The time of day of the occurrence (in seconds of day) (or maybe hh:mm)
  * @property[userId] The user that created the occurrence
  * @property[eventId] the event the occurrence refers to
  * @property[detail] anything extra

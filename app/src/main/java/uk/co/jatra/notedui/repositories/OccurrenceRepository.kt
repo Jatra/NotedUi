@@ -4,12 +4,13 @@ import android.util.Log
 import io.reactivex.Flowable
 import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
+import io.reactivex.subjects.Subject
 import org.threeten.bp.LocalDate
 import org.threeten.bp.LocalTime
 import org.threeten.bp.format.DateTimeFormatter
-import uk.co.jatra.noted.model.OccurrenceDetail
 import uk.co.jatra.notedui.model.Event
 import uk.co.jatra.notedui.model.Occurrence
+import uk.co.jatra.notedui.model.OccurrenceDetail
 import uk.co.jatra.notedui.persistence.EventDao
 import uk.co.jatra.notedui.persistence.OccurrenceDao
 import javax.inject.Inject
@@ -36,6 +37,13 @@ class OccurrenceRepository @Inject constructor(
         occurrenceDao.getAllOccurrencesDetailsByDate(date.toString())
             .subscribe {
                 occurrenceDetailsSubject.onNext(it)
+            }
+    }
+
+    fun getDetailsByDay(date: LocalDate, responseSubject: Subject<List<OccurrenceDetail>>) {
+        occurrenceDao.getAllOccurrencesDetailsByDate(date.toString())
+            .subscribe {
+                responseSubject.onNext(it)
             }
     }
 
@@ -74,7 +82,7 @@ class OccurrenceRepository @Inject constructor(
         Occurrence(
             id = 0,
             date = LocalDate.now().toString(),
-            time = LocalTime.now().format(DateTimeFormatter.ofPattern("h:mma")),
+            time = LocalTime.now().format(DateTimeFormatter.ofPattern("N")), //nano-of-day
             userId = "User1",
             eventId = event.id.toString(),
             detail = "${event.name}, ${event.description}"

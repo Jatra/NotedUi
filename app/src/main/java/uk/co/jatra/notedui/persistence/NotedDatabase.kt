@@ -4,9 +4,9 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import uk.co.jatra.noted.model.OccurrenceDetail
 import uk.co.jatra.notedui.model.Event
 import uk.co.jatra.notedui.model.Occurrence
+import uk.co.jatra.notedui.model.OccurrenceDetail
 
 @Database(
     entities = [Event::class, Occurrence::class],
