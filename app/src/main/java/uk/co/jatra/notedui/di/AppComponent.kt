@@ -2,7 +2,9 @@ package uk.co.jatra.notedui.di
 
 import dagger.Component
 import uk.co.jatra.notedui.repositories.OccurrenceRepository
+import uk.co.jatra.notedui.ui.DatePickerFragment
 import uk.co.jatra.notedui.ui.MainActivity
+import uk.co.jatra.notedui.ui.OccurrenceFragment
 import uk.co.jatra.notedui.ui.OccurrenceViewModelFactory
 import javax.inject.Singleton
 
@@ -12,4 +14,6 @@ interface AppComponent {
     fun inject(target: MainActivity)
     fun inject(target: OccurrenceViewModelFactory)
     fun inject(target: OccurrenceRepository)
+    fun inject(target: OccurrenceFragment)
+    fun inject(target: DatePickerFragment)
 }

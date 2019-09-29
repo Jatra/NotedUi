@@ -29,20 +29,20 @@ class OccurrenceRepository @Inject constructor(
 //        addDummyOccurrences()
     }
 
-    val occurrencesSubject: BehaviorSubject<List<Occurrence>> = BehaviorSubject.create()
     val occurrenceDetailsSubject: BehaviorSubject<List<OccurrenceDetail>> = BehaviorSubject.create()
 
-    fun getDayData(date: LocalDate) {
-        occurrenceDao.getAllOccurrencesByDate(date.toString())
-            .subscribe {
-                occurrencesSubject.onNext(it)
-            }
-    }
 
     fun getDetailsByDay(date: LocalDate) {
         occurrenceDao.getAllOccurrencesDetailsByDate(date.toString())
             .subscribe {
                 occurrenceDetailsSubject.onNext(it)
+            }
+    }
+
+    fun getAllDetails() {
+        occurrenceDao.getAllOccurrencesDetails()
+            .subscribe {
+                Log.d("ARCHIVE", it.joinToString("\n"))
             }
     }
 
@@ -74,7 +74,7 @@ class OccurrenceRepository @Inject constructor(
         Occurrence(
             id = 0,
             date = LocalDate.now().toString(),
-            time = LocalTime.now().format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+            time = LocalTime.now().format(DateTimeFormatter.ofPattern("h:mma")),
             userId = "User1",
             eventId = event.id.toString(),
             detail = "${event.name}, ${event.description}"

@@ -59,6 +59,13 @@ interface OccurrenceDao {
     @Query("SELECT * FROM OccurrenceDetail WHERE date = :date ORDER BY time DESC")
     fun getAllOccurrencesDetailsByDate(date: String): Flowable<List<OccurrenceDetail>>
 
+    /**
+     * Get all [OccurrenceDetail] (join of Occurrence and Event)
+     * @return all Occurrences with details
+     */
+    @Query("SELECT * FROM OccurrenceDetail ORDER BY time DESC")
+    fun getAllOccurrencesDetails(): Flowable<List<OccurrenceDetail>>
+
 
     /**
      * Delete a specific occurrence.

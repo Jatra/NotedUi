@@ -13,7 +13,7 @@ import uk.co.jatra.notedui.R
 private const val TAG = "EventAdapter"
 
 interface EventRequestListener {
-    fun addOccurrenceOfEvent(id: String)
+    fun addTodayOccurrenceOfEvent(id: String)
 }
 
 class EventsAdapter(private val listener: EventRequestListener) :
@@ -36,7 +36,7 @@ class EventsAdapter(private val listener: EventRequestListener) :
                 setNowButtonVisible(view, false)
                 val eventId = view.tag as String
                 Log.d(TAG, "Add an occurrence of event $eventId dated NOW")
-                this.listener.addOccurrenceOfEvent(eventId)
+                this.listener.addTodayOccurrenceOfEvent(eventId)
             }
         }
         return EventViewHolder(view)
