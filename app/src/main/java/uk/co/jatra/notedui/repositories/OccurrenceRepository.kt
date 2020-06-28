@@ -5,14 +5,14 @@ import io.reactivex.Flowable
 import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
 import io.reactivex.subjects.Subject
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalTime
-import org.threeten.bp.format.DateTimeFormatter
 import uk.co.jatra.notedui.model.Event
 import uk.co.jatra.notedui.model.Occurrence
 import uk.co.jatra.notedui.model.OccurrenceDetail
 import uk.co.jatra.notedui.persistence.EventDao
 import uk.co.jatra.notedui.persistence.OccurrenceDao
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import javax.inject.Inject
 import javax.inject.Named
 import javax.inject.Singleton

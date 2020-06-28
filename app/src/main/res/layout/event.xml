@@ -37,6 +37,7 @@
     <com.google.android.material.button.MaterialButton
         android:id="@+id/nowButton"
         style="@style/Widget.MaterialComponents.Button"
+        app:backgroundTint="@color/colorAccent"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="@string/now"

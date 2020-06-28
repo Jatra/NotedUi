@@ -18,11 +18,11 @@ import com.google.android.material.bottomsheet.BottomSheetBehavior.*
 import kotlinx.android.synthetic.main.events_sheet.*
 import kotlinx.android.synthetic.main.events_sheet.view.*
 import kotlinx.android.synthetic.main.occurrences_fragment.view.*
-import org.threeten.bp.LocalDate
 import uk.co.jatra.notedui.NotedApplication
 import uk.co.jatra.notedui.R
 import uk.co.jatra.notedui.model.EventViewModel
 import uk.co.jatra.notedui.model.OccurrenceViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 
 /**
@@ -67,7 +67,7 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         itemTouchHelper.attachToRecyclerView(root.recycler)
 
         occurrenceViewModel.viewStates.observe(
-            this,
+            viewLifecycleOwner,
             Observer<List<OccurrenceViewState>> { occurrences ->
                 occurrencesAdapter.occurrences = occurrences
                 root.ptr.isRefreshing = false
@@ -76,11 +76,11 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         occurrenceViewModel.getDetails()
 
-        occurrenceViewModel.date.observe(this, Observer<String> {
+        occurrenceViewModel.date.observe(viewLifecycleOwner, Observer<String> {
             root.dateText.text = it
         })
 
-        occurrenceViewModel.showDatePicker.observe(this, Observer {
+        occurrenceViewModel.showDatePicker.observe(viewLifecycleOwner, Observer {
             showDatePicker(it)
         })
 
@@ -121,7 +121,7 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
                 .get(EventViewModel::class.java)
 
         eventViewModel.viewStates.observe(
-            this,
+            viewLifecycleOwner,
             Observer<List<EventViewState>> { events ->
                 eventsAdapter.events = events
             }

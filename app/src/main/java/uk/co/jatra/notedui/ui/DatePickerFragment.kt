@@ -6,9 +6,9 @@ import android.os.Bundle
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import org.threeten.bp.LocalDate
 import uk.co.jatra.notedui.NotedApplication
 import uk.co.jatra.notedui.model.OccurrenceViewModel
+import java.time.LocalDate
 import javax.inject.Inject
 
 private const val DAY = "DAY"
@@ -31,7 +31,7 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
         } ?: throw Exception("Invalid Activity")
 
         return DatePickerDialog(
-            activity,
+            requireActivity(),
             this,
             arguments?.get(YEAR) as Int,
             arguments?.get(MONTH) as Int,

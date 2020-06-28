@@ -2,15 +2,12 @@ package uk.co.jatra.notedui.ui
 
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import uk.co.jatra.notedui.NotedApplication
 import uk.co.jatra.notedui.R
 
 class MainActivity : AppCompatActivity() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (application as NotedApplication).appComponent.inject(this)
-
         setContentView(R.layout.activity_main)
         if (savedInstanceState == null) {
             supportFragmentManager.beginTransaction()

@@ -3,14 +3,14 @@ package uk.co.jatra.notedui.model
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import io.reactivex.disposables.CompositeDisposable
-import org.threeten.bp.LocalDate
-import org.threeten.bp.LocalTime
-import org.threeten.bp.format.DateTimeFormatter
 import uk.co.jatra.notedui.repositories.OccurrenceRepository
 import uk.co.jatra.notedui.ui.EventRequestListener
 import uk.co.jatra.notedui.ui.OccurrenceRequestListener
 import uk.co.jatra.notedui.ui.OccurrenceViewState
 import uk.co.jatra.notedui.util.SingleLiveEvent
+import java.time.LocalDate
+import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 
 class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewModel(),
     EventRequestListener, OccurrenceRequestListener {
@@ -27,6 +27,9 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
         }
 
     init {
+        //FIXME this means we are listening for all updates from the repository,
+        //even though the date of updates change.
+        //eg when monitoring X days ago, a new Occurrence will cause an update.
         disposables.add(
             repository.occurrenceDetailsSubject.subscribe {
                 viewStates.postValue(it.map { details ->
@@ -38,9 +41,8 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
                         timeString(details)
                     )
                 })
-                date.postValue(dateText(internalDate))
+//                date.postValue(dateText(internalDate))
             })
-
     }
 
     /**
@@ -59,8 +61,8 @@ class OccurrenceViewModel(private val repository: OccurrenceRepository) : ViewMo
     }
 
     override fun addTodayOccurrenceOfEvent(id: String) {
-        repository.addOccurrence(id)
         today()
+        repository.addOccurrence(id)
     }
 
     override fun removeOccurrence(id: String) {
