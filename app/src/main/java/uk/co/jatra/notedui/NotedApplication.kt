@@ -1,7 +1,6 @@
 package uk.co.jatra.notedui
 
 import android.app.Application
-import com.jakewharton.threetenabp.AndroidThreeTen
 import uk.co.jatra.notedui.di.AppComponent
 import uk.co.jatra.notedui.di.AppModule
 import uk.co.jatra.notedui.di.DaggerAppComponent
@@ -12,7 +11,6 @@ class NotedApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
-        AndroidThreeTen.init(this)
         appComponent = initDagger(this)
     }
 
