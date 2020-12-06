@@ -15,10 +15,10 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
 import com.google.android.material.bottomsheet.BottomSheetBehavior.*
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.events_sheet.*
 import kotlinx.android.synthetic.main.events_sheet.view.*
 import kotlinx.android.synthetic.main.occurrences_fragment.view.*
-import uk.co.jatra.notedui.NotedApplication
 import uk.co.jatra.notedui.R
 import uk.co.jatra.notedui.model.EventViewModel
 import uk.co.jatra.notedui.model.OccurrenceViewModel
@@ -28,6 +28,7 @@ import javax.inject.Inject
 /**
  * A placeholder fragment containing a simple view.
  */
+@AndroidEntryPoint
 class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onDateSet(view: DatePicker?, year: Int, month: Int, dayOfMonth: Int) {
@@ -43,7 +44,6 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        (activity!!.application as NotedApplication).appComponent.inject(this)
         occurrenceViewModel = activity?.run {
             ViewModelProviders.of(this, occurrenceViewModelFactory)
                 .get(OccurrenceViewModel::class.java)

@@ -2,6 +2,8 @@ package uk.co.jatra.notedui.di
 
 import dagger.Module
 import dagger.Provides
+import dagger.hilt.InstallIn
+import dagger.hilt.android.components.ApplicationComponent
 import io.reactivex.Scheduler
 import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
@@ -11,6 +13,7 @@ import javax.inject.Named
  * Dagger module for providing Rx Schedulers.
  */
 @Module
+@InstallIn(ApplicationComponent::class)
 class SchedulerModule {
 
     /**

@@ -6,7 +6,7 @@ import android.os.Bundle
 import android.widget.DatePicker
 import androidx.fragment.app.DialogFragment
 import androidx.lifecycle.ViewModelProviders
-import uk.co.jatra.notedui.NotedApplication
+import dagger.hilt.android.AndroidEntryPoint
 import uk.co.jatra.notedui.model.OccurrenceViewModel
 import java.time.LocalDate
 import javax.inject.Inject
@@ -15,6 +15,7 @@ private const val DAY = "DAY"
 private const val MONTH = "MONTH"
 private const val YEAR = "YEAR"
 
+@AndroidEntryPoint
 class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener {
 
     @Inject
@@ -22,7 +23,6 @@ class DatePickerFragment : DialogFragment(), DatePickerDialog.OnDateSetListener 
     private lateinit var model: OccurrenceViewModel
 
     override fun onCreateDialog(savedInstanceState: Bundle?): Dialog {
-        (activity!!.application as NotedApplication).appComponent.inject(this)
 
         model = activity?.run {
             ViewModelProviders.of(this, occurrenceViewModelFactory)
