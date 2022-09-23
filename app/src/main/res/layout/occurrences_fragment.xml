@@ -24,7 +24,7 @@
                 android:layout_marginStart="16dp"
                 android:foreground="?attr/selectableItemBackground"
                 android:padding="4dp"
-                android:tint="?android:attr/textColorPrimary"
+                app:tint="?android:attr/textColorPrimary"
                 app:srcCompat="@drawable/ic_keyboard_arrow_left_black_24dp" />
 
             <TextView

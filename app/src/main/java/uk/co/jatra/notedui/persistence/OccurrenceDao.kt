@@ -4,8 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Completable
-import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
 import uk.co.jatra.notedui.model.Occurrence
 import uk.co.jatra.notedui.model.OccurrenceDetail
 
@@ -20,7 +19,7 @@ interface OccurrenceDao {
      * @return the occurrence from the table with a specific id.
      */
     @Query("SELECT * FROM Occurrence WHERE id = :id")
-    fun getOccurrenceById(id: String): Flowable<Occurrence>
+    fun getOccurrenceById(id: String): Flow<Occurrence>
 
     /**
      * Get all occurrences
@@ -28,7 +27,7 @@ interface OccurrenceDao {
      */
 
     @Query("SELECT * FROM Occurrence ORDER BY date,time DESC")
-    fun getAllOccurrences(): Flowable<List<Occurrence>>
+    fun getAllOccurrences(): Flow<List<Occurrence>>
 
     /**
      * Get all occurrences of a specific date
@@ -36,34 +35,34 @@ interface OccurrenceDao {
      */
 
     @Query("SELECT * FROM Occurrence WHERE date = :date ORDER BY time DESC")
-    fun getAllOccurrencesByDate(date: String): Flowable<List<Occurrence>>
+    fun getAllOccurrencesByDate(date: String): Flow<List<Occurrence>>
 
     /**
      * Insert a occurrence in the database. If the occurrence already exists, replace it.
      * @param occurrence the occurrence to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertOccurrence(occurrence: Occurrence): Completable
+    suspend fun insertOccurrence(occurrence: Occurrence)
 
     /**
      * Delete all occurrences.
      */
     @Query("DELETE FROM Occurrence")
-    fun deleteAllOccurrences()
+    suspend fun deleteAllOccurrences()
 
     /**
      * Get [OccurrenceDetail] (join of Occurrence and Event) of a specific date
      * @return all Occurrences with details, for a specific date.
      */
     @Query("SELECT * FROM OccurrenceDetail WHERE date = :date ORDER BY time DESC")
-    fun getAllOccurrencesDetailsByDate(date: String): Flowable<List<OccurrenceDetail>>
+    fun getAllOccurrencesDetailsByDate(date: String): Flow<List<OccurrenceDetail>>
 
     /**
      * Get all [OccurrenceDetail] (join of Occurrence and Event)
      * @return all Occurrences with details
      */
     @Query("SELECT * FROM OccurrenceDetail ORDER BY time DESC")
-    fun getAllOccurrencesDetails(): Flowable<List<OccurrenceDetail>>
+    fun getAllOccurrencesDetails(): Flow<List<OccurrenceDetail>>
 
 
     /**
@@ -71,5 +70,5 @@ interface OccurrenceDao {
      * @param id the id of the occurrence to delete
      */
     @Query("DELETE FROM occurrence WHERE id = :id")
-    fun deleteOccurrence(id: String): Completable
+    fun deleteOccurrence(id: String)
 }
