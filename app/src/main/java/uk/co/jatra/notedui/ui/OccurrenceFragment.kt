@@ -9,8 +9,8 @@ import android.view.ViewGroup
 import android.widget.DatePicker
 import androidx.core.view.isVisible
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.google.android.material.bottomsheet.BottomSheetBehavior
@@ -23,7 +23,6 @@ import uk.co.jatra.notedui.R
 import uk.co.jatra.notedui.model.EventViewModel
 import uk.co.jatra.notedui.model.OccurrenceViewModel
 import java.time.LocalDate
-import javax.inject.Inject
 
 /**
  * A placeholder fragment containing a simple view.
@@ -35,23 +34,8 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         occurrenceViewModel.setDate(year, month, dayOfMonth)
     }
 
-    private lateinit var occurrenceViewModel: OccurrenceViewModel
-    private lateinit var eventViewModel: EventViewModel
-    @Inject
-    lateinit var occurrenceViewModelFactory: OccurrenceViewModelFactory
-    @Inject
-    lateinit var eventViewModelFactory: EventViewModelFactory
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        occurrenceViewModel = activity?.run {
-            ViewModelProviders.of(this, occurrenceViewModelFactory)
-                .get(OccurrenceViewModel::class.java)
-        } ?: throw Exception("Invalid Activity")
-
-        ViewModelProviders.of(this, occurrenceViewModelFactory)
-            .get(OccurrenceViewModel::class.java)
-    }
+    private val occurrenceViewModel: OccurrenceViewModel by viewModels()
+    private val eventViewModel: EventViewModel by viewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -87,7 +71,7 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
 
         val sheetBehavior = BottomSheetBehavior.from(root.eventSheet).apply {
             state = STATE_EXPANDED
-            setBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
+            addBottomSheetCallback(object : BottomSheetBehavior.BottomSheetCallback() {
                 override fun onSlide(p0: View, p1: Float) {
                 }
 
@@ -115,10 +99,6 @@ class OccurrenceFragment : Fragment(), DatePickerDialog.OnDateSetListener {
         val eventsAdapter = EventsAdapter(occurrenceViewModel)
         root.eventList.adapter = eventsAdapter
         root.eventList.layoutManager = LinearLayoutManager(context)
-
-        eventViewModel =
-            ViewModelProviders.of(this, eventViewModelFactory)
-                .get(EventViewModel::class.java)
 
         eventViewModel.viewStates.observe(
             viewLifecycleOwner,

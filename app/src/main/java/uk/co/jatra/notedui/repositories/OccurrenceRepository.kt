@@ -1,10 +1,12 @@
 package uk.co.jatra.notedui.repositories
 
 import android.util.Log
-import io.reactivex.Flowable
 import io.reactivex.Scheduler
 import io.reactivex.subjects.BehaviorSubject
-import io.reactivex.subjects.Subject
+import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.MutableSharedFlow
+import kotlinx.coroutines.flow.collect
+import kotlinx.coroutines.flow.first
 import uk.co.jatra.notedui.model.Event
 import uk.co.jatra.notedui.model.Occurrence
 import uk.co.jatra.notedui.model.OccurrenceDetail
@@ -31,51 +33,47 @@ class OccurrenceRepository @Inject constructor(
     }
 
     val occurrenceDetailsSubject: BehaviorSubject<List<OccurrenceDetail>> = BehaviorSubject.create()
+    val occurrenceDetailsState: MutableSharedFlow<List<OccurrenceDetail>> = MutableSharedFlow()
 
-
-    fun getDetailsByDay(date: LocalDate) {
+    suspend fun getDetailsByDay(date: LocalDate) {
         occurrenceDao.getAllOccurrencesDetailsByDate(date.toString())
-            .subscribe {
-                occurrenceDetailsSubject.onNext(it)
+            .collect {
+                occurrenceDetailsState.emit(it)
             }
     }
 
-    fun getDetailsByDay(date: LocalDate, responseSubject: Subject<List<OccurrenceDetail>>) {
-        occurrenceDao.getAllOccurrencesDetailsByDate(date.toString())
-            .subscribe {
-                responseSubject.onNext(it)
-            }
-    }
+//    suspend fun getDetailsByDay(date: LocalDate, responseSubject: Subject<List<OccurrenceDetail>>) {
+//        occurrenceDao.getAllOccurrencesDetailsByDate(date.toString())
+//            .subscribe {
+//                responseSubject.onNext(it)
+//            }
+//    }
 
-    fun getAllDetails() {
+    suspend fun getAllDetails() {
         occurrenceDao.getAllOccurrencesDetails()
-            .subscribe {
+            .collect {
                 Log.d("ARCHIVE", it.joinToString("\n"))
             }
     }
 
-    fun addOccurrence(eventId: String) {
-        eventDao.getAllEvents()
-            .flatMap { list ->
-                Flowable.fromIterable(list)
-                    .filter { event -> event.id == eventId.toLong() }
+    suspend fun addOccurrence(eventId: String) {
+        val allEvents: Flow<List<Event>> = eventDao.getAllEvents()
+        allEvents.first()
+            .first { event ->
+                event.id == eventId.toLong()
             }
-            .subscribe { event ->
+            .let { event ->
                 occurrenceDao.insertOccurrence(makeOccurrence(event))
-                    .subscribeOn(ioScheduler)
-                    .subscribe {
-                        getDetailsByDay(LocalDate.now())
-                    }
-
+                getDetailsByDay(LocalDate.now())
             }
     }
 
-    fun removeOccurrence(id: String) {
+    suspend fun removeOccurrence(id: String) {
         occurrenceDao.deleteOccurrence(id)
-            .subscribeOn(ioScheduler)
-            .subscribe {
-                getDetailsByDay(LocalDate.now())
-            }
+//            .subscribeOn(ioScheduler)
+//            .subscribe {
+        getDetailsByDay(LocalDate.now())
+//            }
     }
 
     private fun makeOccurrence(event: Event) =
@@ -88,7 +86,7 @@ class OccurrenceRepository @Inject constructor(
             detail = "${event.name}, ${event.description}"
         )
 
-    private fun addDummyOccurrences() {
+    private suspend fun addDummyOccurrences() {
         occurrenceDao.insertOccurrence(
             Occurrence(
                 0,
@@ -99,10 +97,7 @@ class OccurrenceRepository @Inject constructor(
                 "detail 1"
             )
         )
-            .subscribeOn(ioScheduler)
-            .subscribe {
-                Log.d(TAG, "Loaded 1")
-            }
+        Log.d(TAG, "Loaded 1")
         occurrenceDao.insertOccurrence(
             Occurrence(
                 0,
@@ -113,10 +108,7 @@ class OccurrenceRepository @Inject constructor(
                 "detail 2"
             )
         )
-            .subscribeOn(ioScheduler)
-            .subscribe {
-                Log.d(TAG, "Loaded 2")
-            }
+        Log.d(TAG, "Loaded 2")
         occurrenceDao.insertOccurrence(
             Occurrence(
                 0,
@@ -127,10 +119,7 @@ class OccurrenceRepository @Inject constructor(
                 "detail 3"
             )
         )
-            .subscribeOn(ioScheduler)
-            .subscribe {
-                Log.d(TAG, "Loaded 3")
-            }
+        Log.d(TAG, "Loaded 3")
     }
 
 }

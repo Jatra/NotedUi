@@ -4,9 +4,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import io.reactivex.Completable
-
-import io.reactivex.Flowable
+import kotlinx.coroutines.flow.Flow
 import uk.co.jatra.notedui.model.Event
 
 /**
@@ -21,11 +19,13 @@ interface EventDao {
      * @return the event from the table with a specific id.
      */
     @Query("SELECT * FROM event WHERE id = :id")
-    fun getEventById(id: String): Flowable<Event>
+    fun getEventById(id: String): Flow<Event>
 
     @Query("SELECT * FROM Event")
+    fun getAllEvents(): Flow<List<Event>>
 
-    fun getAllEvents(): Flowable<List<Event>>
+    @Query("SELECT * FROM Event")
+    suspend fun getEventList(): List<Event>
 
     /**
      * Insert a event in the database. If the event already exists, replace it.
@@ -33,11 +33,11 @@ interface EventDao {
      * @param event the event to be inserted.
      */
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertEvent(event: Event): Completable
+    suspend fun insertEvent(event: Event)
 
     /**
      * Delete all events.
      */
     @Query("DELETE FROM Event")
-    fun deleteAllEvents()
+    suspend fun deleteAllEvents()
 }
